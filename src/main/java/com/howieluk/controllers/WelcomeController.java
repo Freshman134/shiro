@@ -15,10 +15,10 @@ public class WelcomeController {
 	@Autowired
 	EmptyService emptyService;
 	
-	@RequestMapping(value="/index")
+	@RequestMapping(value="/hello")
 	public String welcome() {
 		System.out.println("welcome");
-		return "index.html";
+		return "index";
 	}
 	
 	@RequestMapping(value="/getAll")
