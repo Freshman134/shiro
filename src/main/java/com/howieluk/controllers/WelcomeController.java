@@ -23,6 +23,12 @@ public class WelcomeController {
 		return "index";
 	}
 
+	@RequestMapping("/login")
+	public String login() {
+		log.info("login");
+		return "login";
+	}
+
 //	@RequestMapping(value="/getAll")
 //	@ResponseBody
 //	public String getAll() {

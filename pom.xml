@@ -188,5 +188,13 @@
   </dependencies>
   <build>
     <finalName>shiro</finalName>
+      <resources>
+          <resource>
+              <directory>${basedir}/src/main/java</directory>
+              <includes>
+                  <include>**/mappers/*.xml</include>
+              </includes>
+          </resource>
+      </resources>
   </build>
 </project>

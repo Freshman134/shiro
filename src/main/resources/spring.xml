@@ -41,6 +41,11 @@
        <!-- sqlSessionFactory -->
        <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
        		<property name="dataSource" ref="dataSource" />
+		   	<property name="mapperLocations">
+				<list>
+					<value>classpath:**/mappers/*.xml</value>
+				</list>
+			</property>
        		<property name="configLocation" value="classpath:mybatis_config.xml"/> <!-- 名字不可以带'-'号 -->
        </bean>
        <!-- Mapper自动扫描组件 -->
