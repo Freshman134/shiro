@@ -17,28 +17,33 @@ public class WelcomeController {
 	@Autowired
 	EmptyService emptyService;
 	
-	@RequestMapping("/hello")
-	public String welcome() {
-		log.info("welcome");
-		return "index";
-	}
+//	@RequestMapping("/hello")
+//	public String welcome() {
+//		log.info("welcome");
+//		return "index";
+//	}
 
-	@RequestMapping("/login")
-	public String login() {
-		log.info("login");
+	@RequestMapping("/loginPage")
+	public String loginPage() {
 		return "login";
 	}
 
-//	@RequestMapping(value="/getAll")
-//	@ResponseBody
-//	public String getAll() {
-//		List<User> resList = this.emptyService.getAll();
-//		String res = "[";
-//		for(User u: resList) {
-//			res = res + u.toString() + ",";
-//		}
-//		res = res.substring(0, res.length() - 2) + "]";
-//		return res;
-//	}
+	@RequestMapping("/helloWorld")
+	public String helloWorld() {
+		log.info("hello world!");
+		return "index";
+	}
+
+	@RequestMapping(value="/getAll")
+	@ResponseBody
+	public String getAll() {
+		List<User> resList = this.emptyService.getAll();
+		String res = "[";
+		for(User u: resList) {
+			res = res + u.toString() + ",";
+		}
+		res = res.substring(0, res.length() - 2) + "]";
+		return res;
+	}
 	
 }

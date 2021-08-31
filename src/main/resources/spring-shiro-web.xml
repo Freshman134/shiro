@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+    <import resource="spring-shiro-realm.xml"/>
+    <!-- 缓存管理器 使用Ehcache实现 -->
+    <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <property name="cacheManagerConfigFile" value="classpath:ehcache.xml"/>
+    </bean>
+    <!-- 会话管理器 -->
+    <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+        <property name="globalSessionTimeout" value="1800000"/>
+        <property name="deleteInvalidSessions" value="true"/>
+        <property name="sessionValidationSchedulerEnabled" value="true"/>
+        <property name="sessionValidationScheduler"> <!-- 默认为null -->
+            <!-- 会话验证调度器 -->
+            <bean class="org.apache.shiro.session.mgt.quartz.QuartzSessionValidationScheduler">
+                <property name="sessionValidationInterval" value="1800000"/>
+                <property name="sessionManager" ref="sessionManager"/>
+            </bean>
+        </property>
+        <property name="sessionDAO"> <!-- 默认为MemorySessionDAO -->
+            <!-- 会话DAO -->
+            <bean class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">
+                <property name="activeSessionsCacheName" value="shiro-activeSessionCache"/> <!-- 默认值：shiro-activeSessionCache -->
+                <property name="sessionIdGenerator"> <!-- 默认为JavaUuidSessionIdGenerator -->
+                    <!-- 会话ID生成器 -->
+                    <bean class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator"/>
+                </property>
+            </bean>
+        </property>
+        <!-- 启用Session ID Cookie -->
+        <property name="sessionIdCookieEnabled" value="true"/>
+        <property name="sessionIdCookie">
+            <!-- 会话Cookie模板 -->
+            <bean class="org.apache.shiro.web.servlet.SimpleCookie">
+                <constructor-arg value="sid"/>
+                <property name="httpOnly" value="true"/>
+                <property name="maxAge" value="180000"/>
+            </bean>
+        </property>
+    </bean>
+    <!-- Shiro生命周期处理器-->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+
+    <!-- 安全管理器 -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="sessionManager" ref="sessionManager"/>
+        <property name="cacheManager" ref="cacheManager"/> <!-- securityManager在注册realm时会自动把cacheManager注入到支持缓存的realm -->
+        <property name="realm" ref="jdbcRealm"/>
+    </bean>
+
+    <!-- 基于Form表单的身份验证过滤器 -->
+    <bean id="formAuthenticationFilter"
+          class="org.apache.shiro.web.filter.authc.FormAuthenticationFilter">
+        <property name="usernameParam" value="username"/> <!-- 默认值为：username -->
+        <property name="passwordParam" value="password"/> <!-- 默认值为：password -->
+    </bean>
+
+    <!-- shiroFilter配置 -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+        <property name="loginUrl" value="/login"/>  <!-- 该值会应用到所有的Filter中 -->
+        <property name="successUrl" value="/helloWorld"/> <!-- 登录成功后调整的地址 -->
+        <property name="filters">
+            <!-- 默认过滤器种类具体查看：org.apache.shiro.web.filter.mgt.DefaultFilter -->
+            <!-- authc默认就是FormAuthenticationFilter -->
+            <util:map>
+                <entry key="authc" value-ref="formAuthenticationFilter"/>
+            </util:map>
+        </property>
+        <property name="filterChainDefinitions">
+            <value>
+                /loginPage = anon
+                /login = authc
+                /** = user
+            </value>
+        </property>
+    </bean>
+
+
+</beans>

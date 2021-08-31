@@ -7,16 +7,16 @@
     <link rel="stylesheet" href="css/login/login.css">
 </head>
 <body>
-<form class="layui-form" action="" method="post">
+<form class="layui-form" action="login" method="post">
     <div class="container">
         <button class="close" title="关闭">X</button>
         <div class="layui-form-mid layui-word-aux">
-            <img id="logoid" src="06.png" height="35">
+            <!-- <img id="logoid" src="06.png" height="35"> -->
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">用户名</label>
             <div class="layui-input-block">
-                <input type="text" name="title" required  lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+                <input type="text" name="username" required  lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
