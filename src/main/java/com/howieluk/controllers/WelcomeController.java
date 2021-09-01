@@ -23,8 +23,9 @@ public class WelcomeController {
 //		return "index";
 //	}
 
-	@RequestMapping("/loginPage")
-	public String loginPage() {
+	@RequestMapping("/login")
+	public String login() {
+		System.out.println("login Page");
 		return "login";
 	}
 
